@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" name="viewport">
+  <title>Циклотрон</title>
+  <link rel="shortcut icon" href="../../favicon/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" href="../../favicon/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="57x57" href="../../favicon/apple-touch-icon-57x57.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="../../favicon/apple-touch-icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-touch-icon-76x76.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="../../favicon/apple-touch-icon-114x114.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="../../favicon/apple-touch-icon-120x120.png" />
+  <link rel="apple-touch-icon" sizes="144x144" href="../../favicon/apple-touch-icon-144x144.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="../../favicon/apple-touch-icon-152x152.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../../favicon/apple-touch-icon-180x180.png" />
+  <meta property="og:image" content="images/meta.jpg">
+  <meta name="description" content="Проекция для Фестиваля Полнокупольного Искусства &laquo;Измерение&raquo; ">
+  <link rel="stylesheet" href="../../styles/content.css">
+</head>
+<body>
+  <div class="cursor" id="cursor" style="top: -150px;">Остановить</div>
+  <div class="fullscreen_video" id="fullscreen_video">
+    <div class="videoWrapper" id="videoWrapper">
+      <video autoplay playsinline poster="../../images/posters/poster_cyclotron.jpg" class="fullscreen" onclick="javascript:videoClick()" onmouseout="javascript:videoOut()" onmouseover="javascript:videoOver()" onmouseout="javascript:videoOut()" src="https://s3.eu-central-1.amazonaws.com/4s4r/cyclotron.mp4"></video>
+    </div>
+    <div class="footer" onmouseover="javascript:document.querySelector('body').style.cursor = 'auto';">
+      <div class="logo"><a href="../../index.html"><img src='../../images/icons/4s4r_logo.png' /></a></div>
+      <div id="about_btn" onclick="javascript:switcher()">О Проекте</div>
+      <div class="status_bar">
+        <div class="heading">Многослойная проекция &laquoЦиклотрон&raquo</div>
+        <div id="video_controls" class="video_controls">
+          <div id="seek_bar">
+            <div id="progress_line"></div>
+            <div id="progress_bar"></div>
+          </div>
+          <p class="timer" id="timer" ">2:26</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="popup" id="popup">
+    <div class="heading">Многослойная проекция &laquoЦиклотрон&raquo</div>
+    <div class="bars">
+      <div class="leftbar">
+          ГРАФИКА <br>
+          4S4R <br>
+          Даша Сусак <br> <br>
+          ЗВУК <br>
+          4S4R <br>
+          Миша Тюкалин
+      </div>
+      <div class="rightbar">
+        <div class="description">
+          Многослойная проекция внутри архитектурного объекта Арка в рамках фестиваля «Ночь новых медиа» в Николо-Ленивце. <br><br>
+          О циклотроне писали &nbsp<a href="http://special.theoryandpractice.ru/4s4r" target="_blank">TNP</a> и <a href="http://bernaskoni.com/projects/arc/" target="_blank">Arc</a>. <br> <br>
+          Предыдущая версия: <br>
+        </div>
+        <br>
+        <div class="small_video">
+          <div class="videoWrapper_small" id="videoWrapper_small">
+            <iframe id="player_0" src="https://player.vimeo.com/video/80882242?api=1&player_id=player_0&color=ff0000&title=0&byline=0&portrait=0" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+          </div>
+        </div>
+        <br>
+        <div class="description">
+          Показан на Международном фестивале полнокупольного искусства Планетарий Музея истории космонавтики им. К.Э. Циолковского<br> Калуга, 2013
+        </div>
+      </div>
+    </div>
+    <div class="logo"><a href="../../index.html"><img src='../../images/icons/4s4r_logo.png' /></a></div>
+    <div id="about_btn" onclick="javascript:switcher()" style="top: 20px; right: 20px; position: fixed;">Закрыть</div>
+  </div>
+  <script src="../../js/libraries/froogaloop2.min.js"></script>
+  <script src="../../js/content.js"></script>
+  <script>
+    var video = document.querySelector("video"),
+        seekBar = document.getElementById("seek_bar"),
+        progressBar = document.getElementById('progress_bar'),
+        timer = document.getElementById("timer"),
+        video_controls = document.getElementById("video_controls"),
+        popup = document.getElementById("popup"),
+        fullscreen_video = document.getElementById("fullscreen_video"),
+        isClosed = true;
+
+    function switcher() {
+      if (isClosed === true) {
+        popup.style.display = 'block';
+        fullscreen_video.style.opacity = '0';
+        video.pause();
+        isClosed = false;
+      } else {
+        popup.style.display = 'none';
+        fullscreen_video.style.opacity = '1';
+        video.play();
+        isClosed = true;
+        stopVideo(document);
+      }
+    }
+
+    var stopVideo = function ( element ) {
+      var iframe = element.querySelector( 'iframe');
+      if ( iframe !== null ) {
+        var iframeSrc = iframe.src;
+        iframe.src = iframeSrc;
+      }
+    };
+
+    setInterval(function() {
+      if (video.duration > 0) {
+        // var minutes = parseInt(video.currentTime / 60, 10),
+        //     seconds = Math.round(video.currentTime % 60),
+        var duration = video.duration,
+            currentTime = video.currentTime,
+            minutes = Math.floor((duration - currentTime)/ 60),
+            seconds = Math.floor(duration - currentTime - minutes * 60),
+            currentSeconds;
+        if (seconds < 10) {
+          currentSeconds = '0' + seconds;
+        } else {
+          currentSeconds = seconds;
+        }
+      }
+      // console.log(currentTime);
+      // console.log(minutes);
+      // console.log(seconds);
+      timer.innerHTML = minutes + ':' + currentSeconds;
+    }, 100);
+
+    var move = function (e) {
+      var x = ((e.pageX - 20)/seekBar.offsetWidth) * 100;
+      progressBar.style.width = x + '%';
+      var time = video.duration * (x / 100);
+      video.currentTime = time;
+    };
+
+    video.addEventListener("timeupdate", function() {
+      var time = (video.currentTime/video.duration) * 100;
+      progressBar.style.width = time + '%';
+    })
+
+    seekBar.addEventListener("mousedown", function() {
+      seekBar.addEventListener("mousemove", move, false);
+      video.pause();
+    })
+    seekBar.addEventListener("mouseup", function() {
+      seekBar.removeEventListener("mousemove", move, false);
+      video.play();
+    })
+  </script>
+</body>
+</html>
